@@ -1,6 +1,7 @@
 package com.blommish.aoc2020
 
 import com.blommish.aoc2020.util.Lines
+import com.blommish.aoc2020.util.charVal
 import com.blommish.aoc2020.util.intValue
 import com.blommish.aoc2020.util.value
 
@@ -17,7 +18,7 @@ private fun santa() = object : Lines<String>() {
             val match = regex.find(line)!!
             val first: Int = match.intValue(1)
             val second = match.intValue(2)
-            val char = match.value(3).toCharArray().single()
+            val char = match.charVal(3)
             match.value(4).count { it == char } in first..second
         }
     }
@@ -27,7 +28,7 @@ private fun santa() = object : Lines<String>() {
             val match = regex.find(line)!!
             val first: Int = match.intValue(1) - 1
             val second = match.intValue(2) - 1
-            val char = match.value(3).toCharArray().single()
+            val char = match.charVal(3)
             val value = match.value(4)
             (char == value[first]).xor(char == value[second])
         }

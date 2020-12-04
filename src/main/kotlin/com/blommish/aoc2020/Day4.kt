@@ -1,6 +1,8 @@
 package com.blommish.aoc2020
 
 import com.blommish.aoc2020.util.Line
+import com.blommish.aoc2020.util.optIntValue
+import com.blommish.aoc2020.util.optValue
 
 fun main() {
     santa().execute({ it.split("\n\n") }, "4_test.txt", "4_1.txt", "4_valid.txt", "4_invalid.txt")
@@ -23,12 +25,12 @@ private fun santa() = object : Line() {
 
     override fun second(lines: List<String>): Int {
         return lines.count { line ->
-            val byrVal = byr.find(line)?.let { it.groups[1]?.value?.toInt() in 1920..2002 } ?: false
-            val iyrVal = iyr.find(line)?.let { it.groups[1]?.value?.toInt() in 2010..2020 } ?: false
-            val eyrVal = eyr.find(line)?.let { it.groups[1]?.value?.toInt() in 2020..2030 } ?: false
+            val byrVal = byr.find(line).optIntValue(1) in 1920..2002
+            val iyrVal = iyr.find(line).optIntValue(1) in 2010..2020
+            val eyrVal = eyr.find(line).optIntValue(1) in 2020..2030
             val hgtVal = hgt.find(line)?.let {
-                val toInt = it.groups[1]?.value?.toInt()
-                val value = it.groups[2]?.value
+                val toInt = it.optIntValue(1)
+                val value = it.optValue(2)
                 if (value == "cm") {
                     toInt in 150..193
                 } else {
