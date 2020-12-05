@@ -17,5 +17,6 @@ class AocUtil {
 fun MatchResult?.charVal(index: Int): Char = value(index).toCharArray().single()
 fun MatchResult?.value(index: Int): String = optValue(index)!!
 fun MatchResult?.intValue(index: Int): Int = optIntValue(index)!!
+
 fun MatchResult?.optIntValue(index: Int): Int? = optValue(index)?.toInt()
 fun MatchResult?.optValue(index: Int): String? = this?.groups?.get(index)?.value
