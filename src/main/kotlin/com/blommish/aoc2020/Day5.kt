@@ -17,9 +17,11 @@ private fun santaSecondSolution() = object : Lines<String>() {
     }
 
     override fun second(lines: List<String>): Int {
-        val intRange = 0..7
         val seats = seats(lines).groupBy({ it.first }, { it.second })
-        val mySeat = seats.entries.first { it.value.size != 8 }.let { k -> k.key to intRange.first { !k.value.contains(it) } }
+        val intRange = 0..7
+        val mySeat = seats.entries
+                .first { it.value.size != 8 }
+                .let { k -> k.key to intRange.first { !k.value.contains(it) } }
         return mySeat.first * 8 + mySeat.second
     }
 
