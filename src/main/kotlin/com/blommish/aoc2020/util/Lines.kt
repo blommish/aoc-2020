@@ -7,9 +7,11 @@ abstract class Lines<T> {
 
     fun execute(mapper: (s: String) -> T, vararg filename: String) {
         val input = filename.toList().map { it to AocUtil.readLines(it).map(mapper) }
-        println("First")
-        input.forEach { println("${it.first} ${first(it.second)}") }
-        println("\nSecond")
-        input.forEach { println("${it.first} ${second(it.second)}") }
+        println("Inputs: ${input.size}")
+        input.forEach {
+            println("\n ${it.first}")
+            println("   First ${first(it.second)}")
+            println("   Second ${second(it.second)}")
+        }
     }
 }

@@ -3,10 +3,10 @@ package com.blommish.aoc2020
 import com.blommish.aoc2020.util.Line
 
 fun main() {
-    santa.execute({ it.split("\n\n") }, "6_test.txt", "6_1.txt")
+    santa().execute({ it.split("\n\n") }, "6_test.txt", "6_1.txt")
 }
 
-object santa : Line() {
+private fun santa() = object : Line() {
 
     override fun first(lines: List<String>): Int {
         return lines.sumOf {
