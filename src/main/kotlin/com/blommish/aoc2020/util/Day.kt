@@ -15,10 +15,16 @@ fun withFile(dayMapper: (lines: List<String>) -> Day,
              vararg filename: String) {
     val input = filename.toList().map { it to fileMapper.invoke(AocUtil.readFile(it)) }
     println("Inputs: ${input.size}")
+    fun withTimer(name: String, timed: () -> Int) {
+        val start = System.currentTimeMillis()
+        val response = timed.invoke()
+        val end = System.currentTimeMillis() - start
+        println("   $name answer:$response time:${end}ms")
+    }
     input.forEach {
         println("\n ${it.first}")
         val day = dayMapper(it.second)
-        println("   First ${day.first()}")
-        println("   Second ${day.second()}")
+        withTimer("First", day::first)
+        withTimer("Second", day::second)
     }
 }
