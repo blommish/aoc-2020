@@ -9,18 +9,17 @@ fun main() {
 
 private class Day8(val lines: List<String>) : Day {
 
-    private val regex = """(\w+) (.*)""".toRegex()
-
     override fun first(): Int {
         return execute().second
     }
 
     override fun second(): Int {
-        for (i in 0..lines.size) {
-            val result = execute(i)
-            if (result.first) {
-                println("   CHANGE INDEX: $i")
-                return result.second
+        lines.forEachIndexed { i, s ->
+            if (s.contains(Regex("jmp|nop"))) {
+                val result = execute(i)
+                if (result.first) {
+                    return result.second
+                }
             }
         }
         return 0
@@ -34,7 +33,7 @@ private class Day8(val lines: List<String>) : Day {
             if (!visited.add(i) || i >= lines.size) {
                 return Pair(false, sum)
             }
-            var (operation, argument) = regex.matchEntire(lines[i])!!.destructured
+            var (operation, argument) = lines[i].split(" ")
             if (changeIndex > -1 && i == changeIndex) {
                 operation = when (operation) {
                     "jmp" -> "nop"
@@ -43,14 +42,13 @@ private class Day8(val lines: List<String>) : Day {
                 }
             }
             when (operation) {
-                "jmp" -> {
-                    i += argument.toInt() - 1
-                }
+                "jmp" -> i += argument.toInt()
                 "acc" -> {
                     sum += argument.toInt()
+                    i++
                 }
+                else -> i++
             }
-            i++
             if (i >= lines.size) {
                 return Pair(true, sum)
             }
