@@ -12,24 +12,25 @@ private class Day17(val lines: List<String>) : DayT<Long> {
     private val neighbourIndexes = -1..1
     private val cycles = 6
     private val initSize = lines.first().length
-    private val cubeSize = initSize + cycles * 2 + 2
+    private val cubeSize = initSize + cycles * 2 + 4
     private val middleIndex = (cubeSize - 1) / 2
 
     override fun first(): Long {
         var cube = initCube()
         for (i in 0 until cycles) {
-            //println("\n#################\nCycle: ${i+1}")
-            val range = (middleIndex - 2 - i)..(middleIndex + 2 + i)
+            val range = 1..(initSize + cycles * 2 + 2)
             val tmpArray = initCubeArray()
             for (z in range) {
                 for (y in range) {
                     for (x in range) {
-                        val current = cube[z][y][x]
-                        val count = count(cube, z, y, x)
-                        if (current == '#' && (count == 3 || count == 4)) {
-                            tmpArray[z][y][x] = '#'
-                        } else if (current == '.' && count == 3) {
-                            tmpArray[z][y][x] = '#'
+                        for (z2 in range) {
+                            val current = cube[z][y][x][z2]
+                            val count = count(cube, z, y, x, z2)
+                            if (current == '#' && (count == 3 || count == 4)) {
+                                tmpArray[z][y][x][z2] = '#'
+                            } else if (current == '.' && count == 3) {
+                                tmpArray[z][y][x][z2] = '#'
+                            }
                         }
                     }
                 }
@@ -37,45 +38,36 @@ private class Day17(val lines: List<String>) : DayT<Long> {
             cube = tmpArray
             //print(cube)
         }
-        return cube.flatten().flatMap { it.toList() }.count { it == '#' }.toLong()
+        return cube.flatten().flatMap { it.toList() }.flatMap { it.toList() }.count { it == '#' }.toLong()
     }
 
-    private fun initCube(): Array<Array<Array<Char>>> {
+    private fun initCube(): Array<Array<Array<Array<Char>>>> {
         val cube = initCubeArray()
         lines.forEachIndexed { lineIndex, line ->
             line.toCharArray().forEachIndexed { columnIndex, s ->
-                cube[middleIndex][middleIndex - 1 + lineIndex][middleIndex - 1 + columnIndex] = s
+                cube[middleIndex][middleIndex - 1 + lineIndex][middleIndex - 1 + columnIndex][middleIndex] = s
             }
         }
         return cube
     }
 
-    private fun initCubeArray() = Array(cubeSize) { Array(cubeSize) { Array(cubeSize) { '.' } } }
+    private fun initCubeArray() = Array(cubeSize) { Array(cubeSize) { Array(cubeSize) { Array(cubeSize) { '.' } } } }
 
-    private fun count(cube: Array<Array<Array<Char>>>, z: Int, y: Int, x: Int): Int {
+    private fun count(cube: Array<Array<Array<Array<Char>>>>, z: Int, y: Int, x: Int, z2: Int): Int {
         var count = 0
         for (zCount in neighbourIndexes) {
             for (yCount in neighbourIndexes) {
                 for (xCount in neighbourIndexes) {
-                    if (cube[z + zCount][y + yCount][x + xCount] == '#') {
-                        count++
+                    for (z2Count in neighbourIndexes) {
+                        if (cube[z + zCount][y + yCount][x + xCount][z2 + z2Count] == '#') {
+                            count++
+                        }
+                        if (count > 4) return count
                     }
-                    if (count > 4) return count
                 }
             }
         }
         return count
-    }
-
-    fun print(arrays: Array<Array<Array<Char>>>) {
-        arrays.forEachIndexed { zIndex, z ->
-            if (z.any { y -> y.any { x -> x == '#' } }) {
-                println("z=$zIndex")
-                z.forEachIndexed { yIndex, y ->
-                    println(y.joinToString(""))
-                }
-            }
-        }
     }
 
     override fun second(): Long {
